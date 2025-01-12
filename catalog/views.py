@@ -5,14 +5,24 @@
 from django.shortcuts import render
 from catalog.models import Product
 from catalog.forms import ContactForm, ProductForm
+from django.views.generic import ListView
 
 
-def home_view(request):
+class ProductListView(ListView):
     """
-    Определяет отображение страницы home.html.
+    Определяет отображение страницы home - product_list.html.
     """
-    products_list = Product.objects.all().order_by("id")
-    return render(request, "home.html", context={"products_list": products_list})
+    model = Product
+    template_name = "product_list.html"
+    context_object_name = "home"
+
+
+# def home_view(request):
+#     """
+#     Определяет отображение страницы home.html.
+#     """
+#     products_list = Product.objects.all().order_by("id")
+#     return render(request, "catalog/home.html", context={"products_list": products_list})
 
 
 def contacts_view(request):
