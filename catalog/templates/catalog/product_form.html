@@ -1,0 +1,25 @@
+<!-- product_form.html -->
+{% extends "catalog/base.html" %}
+{% block title %} Skystore {% endblock %}
+{% block content %}
+{% include "catalog/header.html" %}
+{% include "catalog/navbar.html" %}
+
+<div class="container">
+    <div class="row" style="align-items: center; justify-content: center;">
+        <div class="col-6">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
