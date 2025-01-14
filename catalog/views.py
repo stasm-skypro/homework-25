@@ -41,6 +41,12 @@ class ProductDetailView(DetailView):
     # template_name = "product_detail.html"
     context_object_name = "product"
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views_counter += 1
+        self.object.save()
+        return self.object
+
 
 class ProductCreateView(CreateView):
     """
@@ -60,7 +66,6 @@ class ProductCreateView(CreateView):
         self.object = form.save()  # Сохраняем объект формы в базу
         # print("Форма прошла валидацию")
         logger.info(f"Продукт '{self.object.product}' успешно создан.")
-        print(f"Продукт '{self.object.product}' успешно создан.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -91,7 +96,6 @@ class ProductUpdateView(UpdateView):
         self.object = form.save()  # Сохраняем объект формы в базу
         # print("Форма прошла валидацию")
         logger.info(f"Продукт '{self.object.product}' успешно обновлён.")
-        print(f"Продукт '{self.object.product}' успешно обновлён.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -128,5 +132,4 @@ class ProductDeleteView(DeleteView):
         """
         product = self.get_object()
         logger.info(f"Продукт '{product.product}' успешно удалён.")
-        print(f"Продукт '{product.product}' успешно удалён.")
         return super().delete(request, *args, **kwargs)

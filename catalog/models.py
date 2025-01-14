@@ -33,6 +33,7 @@ class Product(models.Model):
     price = models.FloatField(null=False, default=1.0, verbose_name="Цена товара")
     created_at = models.DateField(verbose_name="Дата производства")
     changed_at = models.DateField(verbose_name="Дата последнего изменения")
+    views_counter = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
 
     def __repl__(self) -> str:
         """Строковое представление для разработчиков."""

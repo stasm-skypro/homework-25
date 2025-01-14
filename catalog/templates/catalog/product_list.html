@@ -30,11 +30,12 @@
               <li>Описание: {{ product.description|truncatechars:30 }}</li>
               <li>Дата производства: {{ product.created_at|date:'d.m.Y' }}</li>
               <li>Категория: {{ product.category.name }}</li>
+              <li>Количество просмотров: {{ product.views_counter }}</li>
             </ul>
             <h5 class="card-title pricing-card-title">{{ product.price }} руб</h5>
             <br />
             <div class="btn-group">
-              <a class="p-2 btn btn-outline-primary" href="product_detail/{{ product.id }}" role="button">Детально...</a>
+              <a class="p-2 btn btn-outline-primary" href="product_detail/{{ product.id }}" role="button">Провалиться</a>
               <a class="p-2 btn btn-outline-secondary" href="product_form/{{ product.id }}" role="button">Редактировать</a>
               <a class="p-2 btn btn-outline-danger" href="product_confirm_delete/{{ product.id }}" role="button">Удалить</a>
             </div>

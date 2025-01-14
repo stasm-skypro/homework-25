@@ -4,7 +4,13 @@ URL configuration for app catalog configuring.
 
 from django.urls import path
 from catalog.apps import CatalogConfig
-from catalog.views import ProductDetailView, ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView
+from catalog.views import (
+    ProductDetailView,
+    ProductListView,
+    ProductCreateView,
+    ProductUpdateView,
+    ProductDeleteView,
+)
 
 
 app_name = CatalogConfig.name

@@ -20,10 +20,11 @@
         <p>Цена: {{ product.price }} руб</p>
         <p>Дата производства: {{ product.created_at|date:'d.m.Y' }}</p>
         <p>Категория: {{ product.category.name }} - {{ product.category.description }}</p>
+        <li>Количество просмотров: {{ product.views_counter }}</li>
         <br />
         <div slass="btn-group">
           <button type="button" class="btn btn-primary">Добавить в корзину</button>
-          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
+          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Вернуться</a>
         </div>
       </div>
     </div>
