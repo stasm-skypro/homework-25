@@ -9,13 +9,11 @@ from catalog.models import Product
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
-logger_path = "catalog/logs/reports.log"
 logger = logging.getLogger("catalog")
 logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler(logger_path, "a", "utf-8")
-file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
+handler = logging.FileHandler("catalog/logs/reports.log", "a", "utf-8")
+handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s"))
+logger.addHandler(handler)
 
 
 class ProductListView(ListView):
@@ -128,7 +126,7 @@ class ProductDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         """
-        Переопределение метода delete для логгирования.
+        Переопределение метода delete для логирования.
         """
         product = self.get_object()
         logger.info(f"Продукт '{product.product}' успешно удалён.")
