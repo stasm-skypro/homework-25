@@ -2,9 +2,20 @@
 Контроллеры, определённые внутри приложения catalog.
 """
 
+import logging
+
 from django.urls import reverse_lazy
 from catalog.models import Product
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+
+logger_path = "catalog/logs/reports.log"
+logger = logging.getLogger("catalog")
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler(logger_path, "a", "utf-8")
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
 
 
 class ProductListView(ListView):
@@ -47,7 +58,9 @@ class ProductCreateView(CreateView):
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        print("Форма прошла валидацию")
+        # print("Форма прошла валидацию")
+        logger.info(f"Продукт '{self.object.product}' успешно создан.")
+        print(f"Продукт '{self.object.product}' успешно создан.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -55,7 +68,8 @@ class ProductCreateView(CreateView):
         Обработка в случае неверной формы.
         """
         print("Форма не прошла валидацию")
-        print(form.errors)  # Вывод ошибок формы в консоль
+        # print(form.errors)  # Вывод ошибок формы в консоль
+        logger.warning(f"Ошибка при создании продукта: {form.errors}")
         return super().form_invalid(form)
 
 
@@ -75,7 +89,9 @@ class ProductUpdateView(UpdateView):
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        print("Форма прошла валидацию")
+        # print("Форма прошла валидацию")
+        logger.info(f"Продукт '{self.object.product}' успешно обновлён.")
+        print(f"Продукт '{self.object.product}' успешно обновлён.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -83,7 +99,8 @@ class ProductUpdateView(UpdateView):
         Обработка в случае неверной формы.
         """
         print("Форма не прошла валидацию")
-        print(form.errors)  # Вывод ошибок формы в консоль
+        # print(form.errors)  # Вывод ошибок формы в консоль
+        logger.warning(f"Ошибка при обновлении продукта: {form.errors}")
         return super().form_invalid(form)
 
 
@@ -97,3 +114,19 @@ class ProductDeleteView(DeleteView):
     # template_name = "product_delete"
     context_object_name = "product"
     success_url = reverse_lazy("catalog:product_list")  # Перенаправление на страницу product_list
+
+    def post(self, request, *args, **kwargs):
+        """
+        Переопределение метода POST для вызова delete.
+        """
+        logger.info(f"Удаление продукта через POST-запрос.")
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Переопределение метода delete для логгирования.
+        """
+        product = self.get_object()
+        logger.info(f"Продукт '{product.product}' успешно удалён.")
+        print(f"Продукт '{product.product}' успешно удалён.")
+        return super().delete(request, *args, **kwargs)

@@ -15,7 +15,9 @@
             <div class="container-fluid text-primary">
               <h2 class="mb-4">{{ product.product }}</h2>
               <div class="justify-content-center">
-                <img src="{{ product.image.url }}" alt="{{ product.product }}" />
+                {% if product.image and product.image.url %}
+                  <img src="{{ product.image.url }}" alt="{{ product.product }}" />
+                {% endif %}
               </div>
             </div>
             <p>Описание: {{ product.description }}</p>
