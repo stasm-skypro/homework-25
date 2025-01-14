@@ -1,29 +1,31 @@
 <!-- product_detail.html -->
-{% extends "catalog/base.html" %}
-{% block title %} Skystore {% endblock %}
+{% extends 'catalog/base.html' %}
+{% block title %}
+  Skystore
+{% endblock %}
 {% block content %}
-{% include "catalog/header.html" %}
-{% include "catalog/navbar.html" %}
+  {% include 'catalog/header.html' %}
+  {% include 'catalog/navbar.html' %}
 
-<div class="container justify-content-center">
-    <div class="container-lg-fluid mt-5 text-primary"
-         style="margin-left: 100px; background-color: #f8f9fa; width: 700px; padding: 10px; border-radius: 15px;">
-        <div class="container-lg-fluid text-body-secondary"
-             style="margin-left: 5px; background-color: white; width: 670px; padding: 15px; border-radius: 15px;">
-            <div class="container-fluid text-primary">
-                <h2 class="mb-4">{{ object_list.product }}</h2>
-                <div class="justify-content-center">
-                    <img src={{ object.image }} alt={{ object.product }}>
-                </div>
-            </div>
-            <p>Описание: {{ object.description }}</p>
-            <p>Цена: {{ object.price }} руб</p>
-            <p>Дата производства: {{ object.created_at|date:"d.m.Y" }}</p>
-            <p>Категория: {{ object.category.name }} - {{ object.category.description }}</p>
-            <br>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Перейти к оформлению</button>
+  <div class="container justify-content-center">
+    <div class="container-lg-fluid mt-5 text-primary" style="margin-left: 100px; background-color: #f8f9fa; width: 700px; padding: 10px; border-radius: 15px;">
+      <div class="container-lg-fluid text-body-secondary" style="margin-left: 5px; background-color: white; width: 670px; padding: 15px; border-radius: 15px;">
+        <div class="container-fluid text-primary">
+          <h2 class="mb-4">{{ product.product }}</h2>
+          <div class="justify-content-center">
+            <img src="{{ product.image.url }}" alt="{{ product.product }}" />
+          </div>
         </div>
+        <p>Описание: {{ product.description }}</p>
+        <p>Цена: {{ product.price }} руб</p>
+        <p>Дата производства: {{ product.created_at|date:'d.m.Y' }}</p>
+        <p>Категория: {{ product.category.name }} - {{ product.category.description }}</p>
+        <br />
+        <div slass="btn-group">
+          <button type="button" class="btn btn-primary">Добавить в корзину</button>
+          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
+        </div>
+      </div>
     </div>
-</div>
-
+  </div>
 {% endblock %}
