@@ -3,6 +3,7 @@
 """
 
 import logging
+import smtplib
 
 from django.urls import reverse_lazy
 from catalog.models import Product
@@ -39,9 +40,28 @@ class ProductDetailView(DetailView):
     # template_name = "product_detail.html"
     context_object_name = "product"
 
+    def send_email(host, subject, to_addr, from_addr, body_text):
+        """
+        Send an email
+        """
+        BODY = "\r\n".join(("From: %s" % from_addr, "To: %s" % to_addr, "Subject: %s" % subject, "", body_text))
+        server = smtplib.SMTP(host)
+        server.sendmail(from_addr, [to_addr], BODY)
+        server.quit()
+
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         self.object.views_counter += 1
+        # Отправлять уведомление администратору, если количество просмотров превысило 100
+        if self.object.views_counter >= 100:
+            # TODO: Отправить уведомление администратору
+            self.send_email(
+                "localhost",
+                "Превышение количества просмотров",
+                "stasm226@gmail.com",
+                "stasm226@gmail.com",
+                "Количество просмотров достигло %s." % self.object.views_counter,
+            )
         self.object.save()
         return self.object
 
@@ -63,7 +83,7 @@ class ProductCreateView(CreateView):
         """
         self.object = form.save()  # Сохраняем объект формы в базу
         # print("Форма прошла валидацию")
-        logger.info(f"Продукт '{self.object.product}' успешно создан.")
+        logger.info("Продукт '%s' успешно создан." % self.object.product)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -72,7 +92,7 @@ class ProductCreateView(CreateView):
         """
         print("Форма не прошла валидацию")
         # print(form.errors)  # Вывод ошибок формы в консоль
-        logger.warning(f"Ошибка при создании продукта: {form.errors}")
+        logger.warning("Ошибка при создании продукта: %s" % form.errors)
         return super().form_invalid(form)
 
 
@@ -93,7 +113,7 @@ class ProductUpdateView(UpdateView):
         """
         self.object = form.save()  # Сохраняем объект формы в базу
         # print("Форма прошла валидацию")
-        logger.info(f"Продукт '{self.object.product}' успешно обновлён.")
+        logger.info("Продукт '%s' успешно обновлён." % self.object.product)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -102,7 +122,7 @@ class ProductUpdateView(UpdateView):
         """
         print("Форма не прошла валидацию")
         # print(form.errors)  # Вывод ошибок формы в консоль
-        logger.warning(f"Ошибка при обновлении продукта: {form.errors}")
+        logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
 
 
@@ -129,5 +149,5 @@ class ProductDeleteView(DeleteView):
         Переопределение метода delete для логирования.
         """
         product = self.get_object()
-        logger.info(f"Продукт '{product.product}' успешно удалён.")
+        logger.info("Продукт '%s' успешно удалён." % product.product)
         return super().delete(request, *args, **kwargs)
