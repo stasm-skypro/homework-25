@@ -2,13 +2,17 @@
 Контроллеры, определённые внутри приложения catalog.
 """
 
+import os
 import logging
-import smtplib
+import smtplib as smtp
 
 from django.urls import reverse_lazy
 from catalog.models import Product
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger("catalog")
 logger.setLevel(logging.DEBUG)
@@ -26,8 +30,6 @@ class ProductListView(ListView):
     # По правилам CBV имя шаблона нужно задать как <app_name>/<model_name>_<action>. Тогда можно было бы обойтись
     # без переменных template_name и context_object_name. Для реализации такого подхода нужно создать в папке
     # templates подкаталог catalog, переместить все шаблоны в этот подкаталог и скорректировать пути внутри шаблонов.
-
-    # template_name = "product_list.html"
     context_object_name = "product_list"
 
 
@@ -37,32 +39,35 @@ class ProductDetailView(DetailView):
     """
 
     model = Product
-    # template_name = "product_detail.html"
     context_object_name = "product"
 
-    def send_email(host, subject, to_addr, from_addr, body_text):
+    def send_email(self, login, password, body_text=""):
         """
         Send an email
         """
-        BODY = "\r\n".join(("From: %s" % from_addr, "To: %s" % to_addr, "Subject: %s" % subject, "", body_text))
-        server = smtplib.SMTP(host)
-        server.sendmail(from_addr, [to_addr], BODY)
+        server = smtp.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(login, password)
+        server.sendmail(login, "stasm226@gmail.com", body_text)
         server.quit()
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         self.object.views_counter += 1
+
         # Отправлять уведомление администратору, если количество просмотров превысило 100
+        login = os.getenv("SMTP_LOGIN")
+        password = os.getenv("SMTP_PASSWORD")
         if self.object.views_counter >= 100:
-            # TODO: Отправить уведомление администратору
             self.send_email(
-                "localhost",
-                "Превышение количества просмотров",
-                "stasm226@gmail.com",
-                "stasm226@gmail.com",
-                "Количество просмотров достигло %s." % self.object.views_counter,
+                login=login,
+                password=password,
+                body_text="Subject: %s\n\n%s"
+                % ("Nobody writes to the colonel", "Count of views encreasy to %s." % self.object.views_counter),
             )
+            logger.info("Количесвто просмотров первысило %s." % self.object.views_counter)
         self.object.save()
+
         return self.object
 
 
@@ -73,8 +78,6 @@ class ProductCreateView(CreateView):
 
     model = Product
     fields = ["product", "description", "image", "category", "price", "created_at", "changed_at"]
-    # template_name = "product_form"
-    # context_object_name = "product_create"
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
@@ -82,7 +85,6 @@ class ProductCreateView(CreateView):
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        # print("Форма прошла валидацию")
         logger.info("Продукт '%s' успешно создан." % self.object.product)
         return super().form_valid(form)
 
@@ -91,7 +93,6 @@ class ProductCreateView(CreateView):
         Обработка в случае неверной формы.
         """
         print("Форма не прошла валидацию")
-        # print(form.errors)  # Вывод ошибок формы в консоль
         logger.warning("Ошибка при создании продукта: %s" % form.errors)
         return super().form_invalid(form)
 
@@ -103,8 +104,6 @@ class ProductUpdateView(UpdateView):
 
     model = Product
     fields = ["product", "description", "image", "category", "price", "created_at", "changed_at"]
-    # template_name = "product_form"
-    # context_object_name = "product_update"
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
@@ -112,7 +111,6 @@ class ProductUpdateView(UpdateView):
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        # print("Форма прошла валидацию")
         logger.info("Продукт '%s' успешно обновлён." % self.object.product)
         return super().form_valid(form)
 
@@ -120,8 +118,6 @@ class ProductUpdateView(UpdateView):
         """
         Обработка в случае неверной формы.
         """
-        print("Форма не прошла валидацию")
-        # print(form.errors)  # Вывод ошибок формы в консоль
         logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
         return super().form_invalid(form)
 
