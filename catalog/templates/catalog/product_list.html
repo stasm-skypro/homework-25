@@ -1,49 +1,52 @@
-<!-- home.html -->
+<!-- product_list.html -->
 {% extends 'catalog/base.html' %}
 {% block title %}
-  Skystore
+Skystore
 {% endblock %}
 {% block content %}
-  {% include 'catalog/header.html' %}
-  {% include 'catalog/navbar.html' %}
+{% include 'catalog/header.html' %}
+{% include 'catalog/navbar.html' %}
 
-  <!-- Заголовок страницы -->
-  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+<!-- Заголовок страницы -->
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
     <h1 class="display-4 text-warning">Skystore</h1>
     <p class="lead">Skystore - это отличный вариант что-то купить или что-то продать</p>
-  </div>
+</div>
 
-  <!-- Контейнер содержащий карточки товаров -->
-  <div class="container text-center">
+<!-- Контейнер содержащий карточки товаров -->
+<div class="container text-center">
     <div class="row">
-      {% for product in product_list %}
+        {% for product in product_list %}
         <div class="col-4 justify-center">
-          <!-- Карточка товара -->
-          <div class="card-header" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
-            <h4 class="my-0 font-weight-normal text-black text-opacity-75">{{ product.product }}</h4>
-            <div class="justify-content-center">
-              <img src="{{ product.image }}" alt="{{ product.product }}" height="200" />
+            <!-- Карточка товара -->
+            <div class="card-header" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
+                <h4 class="my-0 font-weight-normal text-black text-opacity-75">{{ product.product }}</h4>
+                <div class="justify-content-center">
+                    <img src="{{ product.image }}" alt="{{ product.product }}" height="200"/>
+                </div>
             </div>
-          </div>
-          <div class="card-body" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
-            <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-              <li>Описание: {{ product.description|truncatechars:30 }}</li>
-              <li>Дата производства: {{ product.created_at|date:'d.m.Y' }}</li>
-              <li>Категория: {{ product.category.name }}</li>
-              <li>Количество просмотров: {{ product.views_counter }}</li>
-            </ul>
-            <h5 class="card-title pricing-card-title">{{ product.price }} руб</h5>
-            <br />
-            <div class="btn-group">
-              <a class="p-2 btn btn-outline-primary" href="product_detail/{{ product.id }}" role="button">Провалиться</a>
-              <a class="p-2 btn btn-outline-secondary" href="product_form/{{ product.id }}" role="button">Редактировать</a>
-              <a class="p-2 btn btn-outline-danger" href="product_confirm_delete/{{ product.id }}" role="button">Удалить</a>
+            <div class="card-body" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
+                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                    <li>Описание: {{ product.description|truncatechars:30 }}</li>
+                    <li>Дата производства: {{ product.created_at|date:'d.m.Y' }}</li>
+                    <li>Категория: {{ product.category.name }}</li>
+                    <li>Количество просмотров: {{ product.views_counter }}</li>
+                </ul>
+                <h5 class="card-title pricing-card-title">{{ product.price }} руб</h5>
+                <br/>
+                <div class="btn-group">
+                    <a class="p-2 btn btn-outline-primary" href="product_detail/{{ product.id }}" role="button">Провалиться</a>
+                    <a class="p-2 btn btn-outline-secondary" href="product_form/{{ product.id }}" role="button">Редактировать</a>
+                    <a class="p-2 btn btn-outline-danger" href="product_confirm_delete/{{ product.id }}" role="button">Удалить</a>
+                </div>
             </div>
-          </div>
-          <br />
-          <!--  -->
+            <br/>
+            <!--  -->
         </div>
-      {% endfor %}
+        {% endfor %}
     </div>
-  </div>
+    <br/>
+    <a class="p-2 btn btn-outline-primary" href="/product_form/">Добавить товар</a>
+</div>
+
 {% endblock %}
