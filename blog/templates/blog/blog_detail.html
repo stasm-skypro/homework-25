@@ -1,0 +1,32 @@
+<!-- blog_detail.html -->
+{% extends 'blog/base.html' %}
+{% block title %}
+Skystore
+{% endblock %}
+{% block content %}
+{% include 'blog/header.html' %}
+{% include 'blog/navbar.html' %}
+
+<div class="container justify-content-center">
+    <div class="container-lg-fluid mt-5 text-primary"
+         style="margin-left: 100px; background-color: #f8f9fa; width: 700px; padding: 10px; border-radius: 15px;">
+        <div class="container-lg-fluid text-body-secondary"
+             style="margin-left: 5px; background-color: white; width: 670px; padding: 15px; border-radius: 15px;">
+            <div class="container-fluid text-primary">
+                <h4 class="mb-4">{{ blog.title }}</h4>
+                <div class="justify-content-center">
+                    <img src="{{ blog_detail.preview }}" alt="{{ blog_detail.title }}" width="400"/>
+                </div>
+            </div>
+            <p>Дата создания: {{ blog_detail.created_at|date:'d.m.Y' }}</p>
+            <p>Количество просмотров: {{ blog_detail.views_counter }}</p>
+            <p>{{ blog_detail.content }}</p>
+            <br/>
+            <div class="btn-group">
+                <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Вернуться</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

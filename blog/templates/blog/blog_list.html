@@ -28,7 +28,7 @@ Skystore
                 <li>Количество просмотров: {{ blog.views_counter }}</li>
                 <li>{{ blog.content|truncatechars:30 }}</li>
             </ul>
-            <a class="p-2 btn btn-outline-primary" href="" role="button">Подробнее</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_detail' blog.pk %}" role="button">Подробнее</a>
         </div>
         {% endif %}
     </div>
