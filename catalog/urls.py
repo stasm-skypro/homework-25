@@ -1,6 +1,4 @@
-"""
-URL configuration for app catalog configuring.
-"""
+# catalog/urls.py.
 
 from django.urls import path
 from catalog.apps import CatalogConfig
