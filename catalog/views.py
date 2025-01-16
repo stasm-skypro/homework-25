@@ -38,9 +38,10 @@ class ProductDetailView(DetailView):
     model = Product
     context_object_name = "product"
 
-    def send_email(self, login, password, body_text=""):
+    @staticmethod
+    def send_email(login, password, body_text=""):
         """
-        Send an email
+        Отправляет почту на адрес администратора.
         """
         server = smtp.SMTP("smtp.gmail.com", 587)
         server.starttls()
@@ -60,7 +61,8 @@ class ProductDetailView(DetailView):
                 login=login,
                 password=password,
                 body_text="Subject: %s\n\n%s"
-                % ("Nobody writes to the colonel", "Count of views encreasy to %s." % self.object.views_counter),
+                          % ("Nobody writes to the colonel",
+                             "The number of views increased to %s." % self.object.views_counter),
             )
             logger.info("Количество просмотров превысило %s." % self.object.views_counter)
 
@@ -100,7 +102,7 @@ class ProductUpdateView(UpdateView):
     """
 
     model = Product
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
@@ -125,7 +127,7 @@ class ProductDeleteView(DeleteView):
     """
 
     model = Product
-    fields = ["product", "description", "image", "category", "price", "created_at", "changed_at"]
+    fields = "__all__"
     # template_name = "product_delete"
     context_object_name = "product"
     success_url = reverse_lazy("catalog:product_list")  # Перенаправление на страницу product_list
@@ -134,7 +136,7 @@ class ProductDeleteView(DeleteView):
         """
         Переопределение метода POST для вызова delete.
         """
-        logger.info(f"Удаление продукта через POST-запрос.")
+        logger.info("Удаление продукта через POST-запрос.")
         return self.delete(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
