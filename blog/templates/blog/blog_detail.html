@@ -15,7 +15,7 @@
             <div class="container-fluid text-primary">
                 <h4 class="mb-4">{{ object.title }}</h4>
                 <div class="justify-content-center">
-                    <img src="{{ object.preview }}" alt="{{ object.title }}" width="400"/>
+                    <img src="{{ object.preview.url }}" alt="{{ object.title }}" style="max-width: 400px;"/>
                 </div>
             </div>
             <p>Дата создания: {{ object.created_at|date:'d.m.Y' }}</p>

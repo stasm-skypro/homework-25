@@ -119,7 +119,7 @@ class BlogDeleteView(DeleteView):
     Определяет отображение удаления статьи.
     """
     model = Blog
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("blog:blog_list")
 
     def post(self, request, *args, **kwargs):

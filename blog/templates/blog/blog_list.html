@@ -21,7 +21,11 @@ Skystore
         <div class="card-header" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
             <h4 class="my-0 font-weight-normal text-black text-opacity-75">{{ blog.title }}</h4>
             <div class="justify-content-center">
-                <img src="{{ blog.preview }}" alt="{{ blog.title }}" width="400"/>
+                {% if blog.preview %}
+                <img src="{{ blog.preview.url }}" alt="{{ blog.preview }}" style="max-height: 200px;"/>
+                {% else %}
+                <img src="media/default.png" alt="{{ blog.title }}" style="max-height: 200px;"/>
+                {% endif %}
             </div>
             <ul class="list-group-horizontal-lg mt-3 mb-4 text-start m-3">
                 <li>Дата создания: {{ blog.created_at|date:'d.m.Y' }}</li>
@@ -31,7 +35,7 @@ Skystore
             <div class="btn-group">
                 <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_detail' blog.pk %}" role="button">Подробнее</a>
                 <a class="p-2 btn btn-outline-secondary" href="{% url 'blog:blog_create' blog.pk %}" role="button">Редактировать</a>
-                <a class="p-2 btn btn-outline-danger" href="" role="button">Удалить</a>
+                <a class="p-2 btn btn-outline-danger" href="{% url 'blog:blog_confirm_delete' blog.pk %}" role="button">Удалить</a>
             </div>
         </div>
         {% endif %}

@@ -16,7 +16,7 @@
               <h2 class="mb-4">{{ product.product }}</h2>
               <div class="justify-content-center">
                 {% if product.image and product.image.url %}
-                  <img src="{{ product.image.url }}" alt="{{ product.product }}" />
+                  <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-width: 400px;" />
                 {% endif %}
               </div>
             </div>
@@ -29,7 +29,7 @@
               {% csrf_token %}
               {{ form.as_p }}
             </div>
-            <div slass="btn-group">
+            <div class="btn-group">
               <button type="submit" class="btn btn-danger">Удалить карточку товара</button>
               <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отменить</a>
             </div>

@@ -6,7 +6,7 @@ class Blog(models.Model):
     """
     title = models.CharField(max_length=255)
     content = models.TextField()
-    preview = models.ImageField(verbose_name="Изображение", blank=True, null=True, upload_to="media/")
+    preview = models.ImageField(verbose_name="Изображение", blank=True, null=True, upload_to="blog/")
     created_at = models.DateField(auto_now_add=True)
     publicated = models.BooleanField(default=False)
     views_counter = models.PositiveIntegerField(default=0)
