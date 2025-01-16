@@ -71,7 +71,7 @@ class BlogCreateView(CreateView):
     Определяет отображение страницы добавления статьи.
     """
     model = Blog
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("blog:blog_list")
 
     def form_valid(self, form):
@@ -95,7 +95,7 @@ class BlogUpdateView(UpdateView):
     Определяет отображение обновления статьи.
     """
     model = Blog
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("blog:blog_list")
 
     def form_valid(self, form):
@@ -112,6 +112,9 @@ class BlogUpdateView(UpdateView):
         """
         logger.warning("Ошибка при обновлении статьи: %s" % form.errors)
         return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("blog:blog_detail", kwargs={"pk": self.object.pk})
 
 
 class BlogDeleteView(DeleteView):
