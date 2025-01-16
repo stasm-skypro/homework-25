@@ -1,7 +1,7 @@
 <!-- blog_detail.html -->
 {% extends 'blog/base.html' %}
 {% block title %}
-Skystore
+    Блог
 {% endblock %}
 {% block content %}
 {% include 'blog/header.html' %}
@@ -13,14 +13,14 @@ Skystore
         <div class="container-lg-fluid text-body-secondary"
              style="margin-left: 5px; background-color: white; width: 670px; padding: 15px; border-radius: 15px;">
             <div class="container-fluid text-primary">
-                <h4 class="mb-4">{{ blog.title }}</h4>
+                <h4 class="mb-4">{{ object.title }}</h4>
                 <div class="justify-content-center">
-                    <img src="{{ blog_detail.preview }}" alt="{{ blog_detail.title }}" width="400"/>
+                    <img src="{{ object.preview }}" alt="{{ object.title }}" width="400"/>
                 </div>
             </div>
-            <p>Дата создания: {{ blog_detail.created_at|date:'d.m.Y' }}</p>
-            <p>Количество просмотров: {{ blog_detail.views_counter }}</p>
-            <p>{{ blog_detail.content }}</p>
+            <p>Дата создания: {{ object.created_at|date:'d.m.Y' }}</p>
+            <p>Количество просмотров: {{ object.views_counter }}</p>
+            <p>{{ object.content }}</p>
             <br/>
             <div class="btn-group">
                 <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Вернуться</a>

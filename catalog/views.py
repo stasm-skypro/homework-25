@@ -23,13 +23,10 @@ logger.addHandler(handler)
 
 class ProductListView(ListView):
     """
-    Определяет отображение страницы product_list.html.
+    Определяет отображение страницы со списком продуктов.
     """
 
     model = Product
-    # По правилам CBV имя шаблона нужно задать как <app_name>/<model_name>_<action>. Тогда можно было бы обойтись
-    # без переменных template_name и context_object_name. Для реализации такого подхода нужно создать в папке
-    # templates подкаталог catalog, переместить все шаблоны в этот подкаталог и скорректировать пути внутри шаблонов.
     context_object_name = "product_list"
 
 
@@ -65,7 +62,8 @@ class ProductDetailView(DetailView):
                 body_text="Subject: %s\n\n%s"
                 % ("Nobody writes to the colonel", "Count of views encreasy to %s." % self.object.views_counter),
             )
-            logger.info("Количесвто просмотров первысило %s." % self.object.views_counter)
+            logger.info("Количество просмотров превысило %s." % self.object.views_counter)
+
         self.object.save()
 
         return self.object
@@ -77,7 +75,7 @@ class ProductCreateView(CreateView):
     """
 
     model = Product
-    fields = ["product", "description", "image", "category", "price", "created_at", "changed_at"]
+    fields = '__all__'
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
@@ -92,7 +90,6 @@ class ProductCreateView(CreateView):
         """
         Обработка в случае неверной формы.
         """
-        print("Форма не прошла валидацию")
         logger.warning("Ошибка при создании продукта: %s" % form.errors)
         return super().form_invalid(form)
 
@@ -103,7 +100,7 @@ class ProductUpdateView(UpdateView):
     """
 
     model = Product
-    fields = ["product", "description", "image", "category", "price", "created_at", "changed_at"]
+    fields = '__all__'
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
