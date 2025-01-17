@@ -26,6 +26,9 @@ class BlogListView(ListView):
     model = Blog
     context_object_name = 'blog_list'
 
+    def get_queryset(self):
+        return Blog.objects.filter(publicated=True)
+
 
 class BlogDetailView(DetailView):
     """
