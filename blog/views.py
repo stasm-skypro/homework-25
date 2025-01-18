@@ -1,42 +1,37 @@
-"""
-Контроллеры, определённые внутри приложения catalog.
-"""
-
+# blog/views.py
 import os
 import logging
 import smtplib as smtp
 
 from django.urls import reverse_lazy
-from catalog.models import Product
+
+from blog.models import Blog
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-logger = logging.getLogger("catalog")
+logger = logging.getLogger("blog")
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler("catalog/logs/reports.log", "a", "utf-8")
+handler = logging.FileHandler("blog/logs/reports.log", "a", "utf-8")
 handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s"))
 logger.addHandler(handler)
 
 
-class ProductListView(ListView):
+class BlogListView(ListView):
     """
-    Определяет отображение страницы со списком продуктов.
+    Определяет отображение страницы блога.
     """
+    model = Blog
+    context_object_name = 'blog_list'
 
-    model = Product
-    context_object_name = "product_list"
 
-
-class ProductDetailView(DetailView):
+class BlogDetailView(DetailView):
     """
-    Определяет отображение детализации (характеристик) продукта.
+    Определяет отображение страницы с содержимым статьи.
     """
-
-    model = Product
-    context_object_name = "product"
+    model = Blog
 
     @staticmethod
     def send_email(login, password, body_text=""):
@@ -71,78 +66,76 @@ class ProductDetailView(DetailView):
         return self.object
 
 
-class ProductCreateView(CreateView):
+class BlogCreateView(CreateView):
     """
-    Определяет отображение добавления продукта.
+    Определяет отображение страницы добавления статьи.
     """
-
-    model = Product
-    fields = '__all__'
-    success_url = reverse_lazy("catalog:product_list")
+    model = Blog
+    fields = "__all__"
+    success_url = reverse_lazy("blog:blog_list")
 
     def form_valid(self, form):
         """
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        logger.info("Продукт '%s' успешно создан." % self.object.product)
+        logger.info("Статья '%s' успешно создана." % self.object.title)
         return super().form_valid(form)
 
     def form_invalid(self, form):
         """
         Обработка в случае неверной формы.
         """
-        logger.warning("Ошибка при создании продукта: %s" % form.errors)
+        logger.warning("Ошибка при создании статьи: %s" % form.errors)
         return super().form_invalid(form)
 
 
-class ProductUpdateView(UpdateView):
+class BlogUpdateView(UpdateView):
     """
-    Определяет отображение обновления продукта.
+    Определяет отображение обновления статьи.
     """
-
-    model = Product
+    model = Blog
     fields = "__all__"
-    success_url = reverse_lazy("catalog:product_list")
+    success_url = reverse_lazy("blog:blog_list")
 
     def form_valid(self, form):
         """
         Дополнительная обработка перед сохранением формы.
         """
         self.object = form.save()  # Сохраняем объект формы в базу
-        logger.info("Продукт '%s' успешно обновлён." % self.object.product)
+        logger.info("Статья '%s' успешно обновлена." % self.object.title)
         return super().form_valid(form)
 
     def form_invalid(self, form):
         """
         Обработка в случае неверной формы.
         """
-        logger.warning("Ошибка при обновлении продукта: %s" % form.errors)
+        logger.warning("Ошибка при обновлении статьи: %s" % form.errors)
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse_lazy("blog:blog_detail", kwargs={"pk": self.object.pk})
 
-class ProductDeleteView(DeleteView):
-    """
-    Определяет отображение удаления продукта.
-    """
 
-    model = Product
+class BlogDeleteView(DeleteView):
+    """
+    Определяет отображение удаления статьи.
+    """
+    model = Blog
     fields = "__all__"
-    # template_name = "product_delete"
-    context_object_name = "product"
-    success_url = reverse_lazy("catalog:product_list")  # Перенаправление на страницу product_list
+    success_url = reverse_lazy("blog:blog_list")
 
     def post(self, request, *args, **kwargs):
         """
         Переопределение метода POST для вызова delete.
         """
-        logger.info("Удаление продукта через POST-запрос.")
+        logger.info("Удаление статьи через POST-запрос.")
         return self.delete(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         """
         Переопределение метода delete для логирования.
         """
-        product = self.get_object()
-        logger.info("Продукт '%s' успешно удалён." % product.product)
+        blog = self.get_object()
+        logger.info("Статья '%s' успешно удалена." % blog.title)
         return super().delete(request, *args, **kwargs)
