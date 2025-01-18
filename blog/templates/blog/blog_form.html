@@ -14,7 +14,7 @@ Skystore
                 <div class="card">
                     <div class="card-body">
                         {% if blog.preview %}
-                        <img src="{{ blog.preview.url }}" alt="{{ blog.title }}" style="max-width: 400px;"/>
+                        <img src="{{ blog.preview.url }}" alt="{{ blog.title }}" style="max-width: 800px;"/>
                         {% endif %}
                         {% csrf_token %}
                         {{ form.as_p }}
