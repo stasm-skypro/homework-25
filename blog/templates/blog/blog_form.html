@@ -1,11 +1,11 @@
 <!-- blog_form.html -->
-{% extends 'blog/base.html' %}
+{% extends 'base.html' %}
 {% block title %}
 Skystore
 {% endblock %}
 {% block content %}
-{% include 'blog/header.html' %}
-{% include 'blog/navbar.html' %}
+{% include 'header.html' %}
+{% include 'navbar.html' %}
 
 <div class="container">
     <div class="row" style="align-items: center; justify-content: center;">
@@ -14,7 +14,7 @@ Skystore
                 <div class="card">
                     <div class="card-body">
                         {% if blog.preview %}
-                        <img src="{{ blog.preview.url }}" alt="{{ blog.title }}" style="max-width: 400px;"/>
+                        <img src="{{ blog.preview.url }}" alt="{{ blog.title }}" style="max-width: 800px;"/>
                         {% endif %}
                         {% csrf_token %}
                         {{ form.as_p }}

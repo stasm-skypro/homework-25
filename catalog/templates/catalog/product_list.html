@@ -1,16 +1,23 @@
 <!-- product_list.html -->
-{% extends 'catalog/base.html' %}
+{% extends 'base.html' %}
 {% block title %}
 Skystore
 {% endblock %}
 {% block content %}
-{% include 'catalog/header.html' %}
-{% include 'catalog/navbar.html' %}
+{% include 'header.html' %}
+{% include 'navbar.html' %}
 
 <!-- Заголовок страницы -->
 <div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
-    <h1 class="display-4 text-warning">Skystore</h1>
-    <p class="lead">Skystore - это отличный вариант что-то купить или что-то продать</p>
+    <div class="row">
+        <div class="col-10">
+            <p class="text-start" style="font-size: 1.2em;">Отличный вариант что-то купить или что-то продать</p>
+        </div>
+        <div class="col-2">
+            <a class="p-2 btn btn-secondary-link" style="color: #adb5bd" href="{% url 'catalog:product_create' %}">Добавить
+                товар</a>
+        </div>
+    </div>
 </div>
 
 <!-- Контейнер содержащий карточки товаров -->
@@ -19,25 +26,31 @@ Skystore
         {% for product in product_list %}
         <div class="col-4 justify-center">
             <!-- Карточка товара -->
-            <div class="card-header" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
-                <h4 class="my-0 font-weight-normal text-black text-opacity-75">{{ product.product }}</h4>
+            <div class="card-header"
+                 style="background-color: #f8f9fa; padding: 5px; border-radius: 5px; box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);">
                 <div class="justify-content-center">
                     <img src="{{ product.image.url }}" alt="{{ product.product }}" style="max-height: 200px;"/>
                 </div>
-            </div>
-            <div class="card-body" style="background-color: #f8f9fa; padding: 10px; border-radius: 10px;">
-                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                    <li>Описание: {{ product.description|truncatechars:30 }}</li>
-                    <li>Дата производства: {{ product.created_at|date:'d.m.Y' }}</li>
-                    <li>Категория: {{ product.category.name }}</li>
-                    <li>Количество просмотров: {{ product.views_counter }}</li>
+                <hr style="border: none; height: 2px; background-color: #000;">
+                <h5 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{product.product}}</h5>
+                <ul class="list-group-horizontal-sm mt-3 mb-4 text-start m-3">
+                    <li class="fw-bold" style="font-size: 0.9em;">{{product.description|truncatechars:30}}</li>
+                    <li style="font-size: 0.9em;">Категория: {{product.category.name}}</li>
+                    <li style="font-size: 0.9em;">Дата производства: {{product.created_at|date:'d.m.Y'}}</li>
+
+                    <li>Количество просмотров: {{product.views_counter}}</li>
                 </ul>
-                <h5 class="card-title pricing-card-title">{{ product.price }} руб</h5>
+                <h5 class="my-0 font-weight-normal text-black text-opacity-75 fw-bold">{{product.price}} руб</h5>
                 <br/>
                 <div class="btn-group">
-                    <a class="p-2 btn btn-outline-primary" href="product_detail/{{ product.id }}" role="button">Подробнее</a>
-                    <a class="p-2 btn btn-outline-secondary" href="product_form/{{ product.id }}" role="button">Редактировать</a>
-                    <a class="p-2 btn btn-outline-danger" href="product_confirm_delete/{{ product.id }}" role="button">Удалить</a>
+                    <a class="p-2 btn btn-secondary-link" href="{% url 'catalog:product_detail' product.pk %}"
+                       role="button"
+                       style="color: #adb5bd;">Подробнее</a>
+                    <a class="p-2 btn btn-secondary-link" href="{% url 'catalog:product_update' product.pk %}"
+                       role="button"
+                       style="color: #adb5bd;">Редактировать</a>
+                    <a class="p-2 btn btn-secondary-link" href="{% url 'catalog:product_delete' product.pk %}"
+                       role="button" style="color: #adb5bd;">Удалить</a>
                 </div>
             </div>
             <br/>
@@ -46,7 +59,6 @@ Skystore
         {% endfor %}
     </div>
     <br/>
-    <a class="p-2 btn btn-outline-primary" href="/product_form/">Добавить товар</a>
 </div>
 
 {% endblock %}

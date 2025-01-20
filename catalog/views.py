@@ -77,7 +77,7 @@ class ProductCreateView(CreateView):
     """
 
     model = Product
-    fields = '__all__'
+    fields = "__all__"
     success_url = reverse_lazy("catalog:product_list")
 
     def form_valid(self, form):
