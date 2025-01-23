@@ -46,7 +46,6 @@ class TestProductDetailView(TestCase):
     def test_product_detail(self):
         """Проверяем, что статус-код 200"""
         url = reverse("catalog:product_detail", kwargs={"pk": self.product.pk})
-        print(url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

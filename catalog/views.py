@@ -39,7 +39,7 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
     @staticmethod
-    def send_email(login, password, body_text=""):
+    def send_email(login: str|None, password: str|None, body_text: str = ""):
         """
         Отправляет почту на адрес администратора.
         """
@@ -128,7 +128,6 @@ class ProductDeleteView(DeleteView):
 
     model = Product
     fields = "__all__"
-    # template_name = "product_delete"
     context_object_name = "product"
     success_url = reverse_lazy("catalog:product_list")  # Перенаправление на страницу product_list
 
